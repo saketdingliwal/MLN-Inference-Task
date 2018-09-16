@@ -1,0 +1,8 @@
+:-fuzzy_relation('~',[reflexive,symmetric]).
+
+a~b=0.8.
+b~c=0.75.
+
+p(X):-q(X),r(X).
+q(c).
+r(a).

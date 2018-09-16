@@ -1,0 +1,221 @@
+
+#.basedir "pa.joeq"
+.include "fielddomains.pa"
+.bddvarorder N0_F0_I0_M1_M0_V1xV0_TV1xTV0_T0_Z0_T1_H0_H1
+
+C 262144
+
+### Input Relations
+
+vP0 (v:V0, h:H0) input outputtuples
+vP (v:V0, h:H0) output 
+A (dest:V0, source:V1) input outputtuples
+# hP0 (ha:H0, field:F0, hb:H1) input
+hP (ha:H0, field:F0, hb:H1) output 
+S (base:V0, field:F0, src:V1) input outputtuples
+L (base:V0, field:F0, dest:V1) input outputtuples
+vT (var:V0, type:T0) input outputtuples
+hT (heap:H0, type:T1) input outputtuples
+aT (type:T0, type:T1) input output outputtuples
+vPfilter (v:V0, h:H0)
+cha (type:T1, name:N0, method:M0) input outputtuples
+actual (invoke:I0, num:Z0, actualparam:V1) input outputtuples
+formal (method:M0, num:Z0, formalparam:V0) input outputtuples
+Mret (method:M0, v:V1) input outputtuples
+Mthr (method:M0, v:V1) input outputtuples
+Iret (invoke:I0, v:V0) input outputtuples
+Ithr (invoke:I0, v:V0) input outputtuples
+IE0 (invoke:I0, method:M0) input outputtuples
+mI (method:M0, invoke:I0, name:N0) input outputtuples
+visited (method:M0) input output outputtuples
+IE (invoke:I0, target:M0) output outputtuples
+mS (method:M0, base:V0, field:F0, src:V1) input outputtuples
+mL (method:M0, base:V0, field:F0, dest:V1) input outputtuples
+mvP (method:M0, v:V0, h:H0) input outputtuples
+mIE (method:M0, invoke:I0, target:M1) input outputtuples
+
+A2 (dest:V0, source:V1) 
+
+### Rules
+
+A2(v1, v2) :- A(v1, v2).
+
+aT(t1,t3) :- aT(t1,t2), aT(t2,t3).
+
+vP(v,h) :- vP0(v,h).
+vPfilter(v,h) :- vT(v,tv), aT(tv,th), hT(h,th).
+vP(v1,h) :- A2(v1,v2), vP(v2,h), vPfilter(v1,h).
+hP(h1,f,h2) :- S(v1,f,v2), vP(v1,h1), vP(v2,h2).
+vP(v2,h2) :- L(v1,f,v2), vP(v1,h1), hP(h1,f,h2), vPfilter(v2,h2). split
+A2(v1,v2) :- IE(i,m), formal(m,z,v1), actual(i,z,v2).
+A2(v2,v1) :- IE(i,m), Mret(m,v1), Iret(i,v2).
+A2(v2,v1) :- IE(i,m), Mthr(m,v1), Ithr(i,v2).
+
+IE(i,m2) :- mI(m1,i,n), actual(i,0,v), vP(v,h), hT(h,t), cha(t,n,m2). split
+IE(i,m) :- IE0(i,m).
+
+visited(m) :- IE(_,m).
+S(v1,f,v2) :- visited(m), mS(m,v1,f,v2).
+L(v1,f,v2) :- visited(m), mL(m,v1,f,v2).
+vP(v,h) :- visited(m), mvP(m,v,h).
+IE(i,m2) :- visited(m), mIE(m,i,m2).
+
+vP0(v,h) :- visited(m), mvP(m,v,h).
+
+# Statements.
+newStatement (dest:V0, type:TV0) 
+castStatement (dest:V0, type:TV0, src:V1) 
+
+# Points-to information
+#pointsTo (context:C, var:V, object:H) input
+#objectType (object:H, type:TV) input
+
+# Map between context and base object.
+# context2baseobject (context:C, location:V, object:H) input
+
+# Class hierarchy information.
+override (supermethod:M, submethod:M)
+
+# Map between code locations and type variables.
+location2typevar (location:V, typevar:TV) input
+
+# Type variables in the source code.
+param2typevar (method:M0, param:Z0, type:TV0) input
+field2typevar (field:F0, type:TV0) input
+ret2typevar (method:M0, type:TV0) input
+
+# Some type variables correspond to concrete types.
+concreteTypes (typevar:TV0, concretetype:T0) input
+concreteTypes2 (typevar:TV0, concretetype:T0) output outputtuples
+
+concreteTypes2(tv, t) :- concreteTypes(tv, t).
+
+newStatement(v,tv) :- vP0(v,h), location2typevar(v,tv).
+castStatement(v1,tv,v2) :- A(v1,v2), vT(v2,t), !vT(v1,t), concreteTypes(tv,t).
+#pointsTo(c,v,h) :- vP0(v,h).
+#objectType(h,tv) :- hT(h,t), concreteTypes(tv,t).
+override(super,sub) :- cha(t1,n,super), cha(t2,n,sub), aT(t1,t2).
+
+### Computed relations
+
+# Encodes subtyping constraints between type variables.
+#    To encode equality between types x and y, include both
+#    (x,y) and (y,x) in the subType relation.
+subType (superT:TV0, subT:TV1) output outputtuples
+subTypeClosed (superT:TV0, subT:TV1) outputtuples
+filteredSubType (superT:TV0, subT:TV1) output outputtuples
+
+# Type variables that correspond to multiple types.
+multiType (typevar:TV0) outputtuples
+
+# Type variables that correspond to a single type.
+singleType (typevar:TV0) outputtuples
+
+# these 3 are used by the plugin to make the transformation easier
+paramMultiType(param:V0) outputtuples
+fieldMultiType(field:F0) outputtuples
+retMultiType(method:M0) outputtuples
+
+paramMultiType(v) :- multiType(t), param2typevar(m, z, t), formal(m, z, v).
+fieldMultiType(f) :- multiType(t), field2typevar(f, t).
+retMultiType(m) :- multiType(t), ret2typevar(m, t).
+
+# multitypes that are going to be declared as type variables in the source are 
+# contained in this relation.
+# TODO: will have to expand this relation to include local variables in the future
+declaredTV(typevar:TV0)
+
+declaredTV(t) :- multiType(t), param2typevar(m, z, t).
+declaredTV(a) :- multiType(a), field2typevar(f, a).
+declaredTV(a) :- multiType(a), ret2typevar(m, a).
+
+### Rules for adding subtype constraints.
+
+# (partial) Transitive closure on subType. if 'a extends b' and 'b extends c', 
+# don't declare a as 'a extends b & c'. so when we do the closure, we 
+# skip the link between a and c if b is a declared TV.
+# (the distinction between subTypeClosed and subType might not be necessary.)
+subTypeClosed(a,c) :- subTypeClosed(a,b), subTypeClosed(b,c), !declaredTV(b).
+subTypeClosed(a,b) :- subType(a,b).
+
+# in source code: 'b extends a', so a must be a declared TV
+filteredSubType(a,b) :- subTypeClosed(a,b), declaredTV(a).
+
+# Parameters of overridden methods are contravariant.
+subType(t2,t1) :- override(m1,m2), param2typevar(m1,z,t1), param2typevar(m2,z,t2).
+
+# Return values of overridden methods are covariant.
+subType(t1,t2) :- override(m1,m2), ret2typevar(m1,t1), ret2typevar(m2,t2).
+
+# Constraints from assignments.
+subType(t1,t2) :- A(v1,v2), location2typevar(v1,t1), \
+                  location2typevar(v2,t2).
+
+# Constraints from return statements.
+subType(t1,t2) :- ret2typevar(m,t1), Mret(m,v2), location2typevar(v2,t2).
+
+# Constraints from load statements.
+subType(t1,t2) :- L(v1,f,v2), field2typevar(f,t2), location2typevar(v2,t1).
+
+# Constraints from store statements.
+subType(t1,t2) :- S(v1,f,v2), field2typevar(f,t1), location2typevar(v2,t2).
+
+# Constraints from invocation parameters.
+subType(t1,t2) :- param2typevar(m,z,t1), IE(i,m), actual(i,z,v2), \
+                  location2typevar(v2,t2).
+
+# Constraints from invocation return values.
+subType(t1,t2) :- ret2typevar(m,t2), IE(i,m), Iret(i,v1), \
+                  location2typevar(v1,t1).
+
+# Constraints from new statements.
+subType(t1,t2) :- newStatement(v1,t2), location2typevar(v1,t1).
+
+# Constraints from cast statements.  Assumes casts always succeed!
+subType(t1,t2) :- castStatement(v1,t2,v3), location2typevar(v1,t1).
+#subType(t1,t3) :- castStatement(v1,t2,v3), location2typevar(v1,t1), location2typevar(v3,t3).
+
+# Constraints from constant statements.
+
+
+### Rules for computing the set of concrete types for each type variable.
+
+concreteTypes2(tv,t) :- vP(v,h), location2typevar(v,tv), hT(h,t).
+
+# Transitive closure over the subType relation.
+concreteTypes2(t1,t) :- subType(t1,t2), concreteTypes2(t2,t).
+
+multiType(t) :- concreteTypes2(t,ta), concreteTypes2(t,tb), ta != tb.
+
+singleType(t) :- !multiType(t), concreteTypes2(t,_).
+
+# used for refining class creation sites
+fieldTypes(h:H0, f:F0, t:T0) output outputtuples
+argTypes(h:H0, v2:V1, t:T0) output outputtuples
+retTypes(h:H0, m:M0, t:T0) output outputtuples
+
+# heap object h may be invoked at i
+heapInvokes(h:H0, i:I0)
+heapInvokes(h, i) :- vP(v, h), actual(i, 0, v).
+
+fieldTypes(h, f, t) :- hP(h, f, h2), hT(h2, t), fieldMultiType(f).
+argTypes(h, v, t) :- heapInvokes(h, i), IE(i, m), vP(v3, h2), hT(h2, t), \
+                        formal(m, z, v), actual(i, z, v3), paramMultiType(v).
+retTypes(h, m, t) :- heapInvokes(h, i), vP(v3, h2), hT(h2, t), \
+                        IE(i, m), Iret(i, v3), retMultiType(m).
+
+genericizedClass(t:T0) outputtuples
+
+genericizedClass(t) :- S(v, f, v2), vT(v, t), fieldMultiType(f).
+genericizedClass(t) :- cha(t, n, m), retMultiType(m).
+genericizedClass(t) :- formal(m, z, v), cha(t, n, m), paramMultiType(v).
+
+genericizedV(v:V0) outputtuples
+genericizedV(v) :- vP(v, h), hT(h, t), genericizedClass(t).
+
+
+#######
+# Stuff about generics
+#
+# Primitive types cannot be type parameters.
+# Parameterized types cannot inherit from java.lang.Throwable.

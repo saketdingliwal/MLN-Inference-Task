@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="net.sf.bddbddb"
+   name="bddbddb Eclipse Plug-in"
+   version="1.0.0"
+   provider-name=""
+   class="net.sf.bddbddb.eclipse.EclipsePlugin">
+
+   <runtime>
+      <library name="bddbddb_eclipse.jar">
+         <export name="*"/>
+      </library>
+      <library name="bddbddb.jar">
+         <export name="*"/>
+      </library>
+      <library name="javabdd.jar">
+         <export name="*"/>
+      </library>
+      <library name="joeq_core.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.text"/>
+   </requires>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="bddbddb Action Set"
+            visible="true"
+            id="net.sf.bddbddb.eclipse.actionSet">
+         <menu
+               label="&amp;bddbddb"
+               id="bddbddbMenu">
+            <separator name="bddbddbGroup"/>
+         </menu>
+            <action
+               toolbarPath="bddbddbGroup"
+               label="&amp;Transform source"
+               icon="icons/4.GIF"
+               tooltip="Transforms the source code after analysis"
+               class="net.sf.bddbddb.eclipse.actions.GenerifyAction"
+               menubarPath="bddbddbMenu/bddbddbGroup"
+               id="Transform"/>
+            <action
+               toolbarPath="bddbddbGroup"
+               label="&amp;Generate relations"
+               class="net.sf.bddbddb.eclipse.actions.GenerifyAction"
+               tooltip="Generate relations from input program"
+               icon="icons/3.GIF"
+               menubarPath="bddbddbMenu/bddbddbGroup"
+               id="GenRelations"/>
+            <action
+               toolbarPath="bddbddbGroup"
+               label="&amp;Parse files"
+               icon="icons/2.GIF"
+               tooltip="Parse the selected files (does not overwrite already parsed files)"
+               class="net.sf.bddbddb.eclipse.actions.GenerifyAction"
+               menubarPath="bddbddbMenu/bddbddbGroup"
+               id="Parse"/>
+            <action
+               toolbarPath="bddbddbGroup"
+               label="&amp;Load class libraries"
+               icon="icons/1.GIF"
+               tooltip="Call joeq to generate BDDs of class files (can only be done once)"
+               class="net.sf.bddbddb.eclipse.actions.GenerifyAction"
+               menubarPath="bddbddbMenu/bddbddbGroup"
+               id="LoadClasses"/>               
+            <action
+               toolbarPath="bddbddbGroup"
+               label="&amp;Reset"
+               icon="icons/0.GIF"
+               tooltip="Reset everything"
+               class="net.sf.bddbddb.eclipse.actions.GenerifyAction"
+               menubarPath="bddbddbMenu/bddbddbGroup"
+               id="Reset"/>
+      </actionSet>
+   </extension>
+
+</plugin>

@@ -1,0 +1,6 @@
+% Proximity equations
+p~q=0.7. 
+
+% Facts and rules
+p:-q. 
+q. 

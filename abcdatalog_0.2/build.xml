@@ -1,0 +1,32 @@
+<project name="AbcDatalog" default="compile">
+    
+    <target name="compile">
+        <mkdir dir="classes"/> 
+        <javac srcdir="src" destdir="classes">
+            <classpath refid="class.path" />
+        </javac>
+    </target>
+ 
+    <path id="class.path">
+        <fileset dir="lib">
+            <include name="**/*.jar" />
+        </fileset>
+        <fileset dir="resources" />
+    </path>
+
+    <target name="clean">
+        <delete dir="classes"/>
+        <delete file="abcdatalog-gui.jar"/>
+    </target>
+
+   <target name="build-gui" depends="compile">
+        <jar destfile="abcdatalog-gui.jar">
+            <fileset dir="classes"></fileset>
+            <fileset dir="${basedir}" includes="license.txt licenses/**"></fileset>
+            <manifest>
+                <attribute name="Main-Class" value="abcdatalog.gui.DatalogGui"/>
+            </manifest>
+        </jar>
+    </target>
+
+</project>

@@ -1,0 +1,18 @@
+:- fuzzy_expansion(des).
+:- t_closure_comp(prolog).
+:- fuzzy_relation(~,[reflexive,symmetric,transitive(product)]).
+
+% Proximity Equations relating Predicates
+tall/1  ~ medium/1 = 0.4.
+medium/1 ~ short/1 = 0.4.
+
+% Facts
+tall(magic_johnson).
+tall(paul).
+
+medium(john).
+medium(ava).
+
+short(bob).
+short(eve).
+

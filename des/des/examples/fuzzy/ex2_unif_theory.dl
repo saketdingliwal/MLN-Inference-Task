@@ -1,0 +1,8 @@
+:-fuzzy_relation('~',[reflexive,symmetric]).
+
+a~b=0.8.
+b~c=0.75.
+
+p(a,c).
+% Goal p(X,X) fails with both A1 and A3
+% Goal p(b,b) succeeds with A1 and fails with A3

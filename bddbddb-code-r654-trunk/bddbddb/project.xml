@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <pomVersion>3</pomVersion>
+  <artifactId>bddbddb</artifactId>
+  <name>bddbddb</name>
+  <groupId>bddbddb</groupId>
+  <id>bddbddb</id>
+  <currentVersion>1.0</currentVersion>
+  <logo>/images/bddbddb_logo_1.png</logo>
+  <organization>
+    <name>Stanford SUIF Compiler Group</name>
+    <url>http://sourceforge.net/</url>
+    <logo>http://sourceforge.net/sflogo.php?group_id=111873&amp;type=5</logo>
+  </organization>
+  <inceptionYear>2004</inceptionYear>
+  <package>net.sf.bddbddb</package>
+  <shortDescription>BDD-Based Deductive DataBase</shortDescription>
+  <description>
+    
+
+        &lt;p&gt;bddbddb stands for BDD-Based Deductive DataBase.  It is
+        an implementation of Datalog, a declarative
+        programming language similar to Prolog for talking about
+        relations.  What makes bddbddb unique is that it represents
+        the relations using binary decision diagrams (BDDs).  BDDs
+        are a data structure that can efficiently represent large
+        relations and provide efficient set operations.  This allows
+        bddbddb to efficient represent and operate on &lt;i&gt;extremely&lt;/i&gt;
+        large relations - relations that are too large to represent
+        explicitly.&lt;/p&gt;
+
+        &lt;p&gt;We use bddbddb primarily as a tool for easily and
+        efficiently specifying program analyses.  We represent the
+        entire program as database relations.  Developing a program
+        analysis becomes as simple as writing the specification for
+        the analysis in a declarative style and then feeding that
+        specification to bddbddb, which automatically transforms your
+        specification into efficient BDD operations.&lt;/p&gt;
+
+        &lt;p&gt;Using bddbddb for program analysis has a number of advantages:
+        &lt;ul&gt;
+
+        &lt;li&gt;First, it closes the gap between the algorithm
+        &lt;i&gt;specification&lt;/i&gt; and its &lt;i&gt;implementation&lt;/i&gt;.  In
+        bddbddb, the algorithm specification is automatically
+        translated into an implementation, so as long as your
+        algorithm specification is correct you can be reasonably sure
+        that your implementation will also be correct.&lt;/li&gt;
+
+        &lt;li&gt;Second, because BDDs can efficiently handle exponential
+        relations, it allows us to solve heretofore unsolved problems
+        in program analysis, such as context-sensitive pointer
+        analysis for large programs.&lt;/li&gt;
+
+        &lt;li&gt;Third, it makes program analysis accessible, and dare I
+        say it, actually &lt;i&gt;fun&lt;/i&gt;.  Trying out a new idea in program
+        analysis used to be confined to the realm of experts and
+        compiler writers, and would take weeks to months of tedious
+        effort to implement and debug.  With bddbddb, writing a new
+        analysis is simply a matter of writing a few straightforward
+        inference rules.  The tool takes care of most of the tedious
+        part and helps you develop powerful program analyses easily.&lt;/li&gt;
+
+        &lt;/ul&gt;
+        &lt;/p&gt;
+
+        &lt;p&gt;bddbddb was written by John Whaley, a Ph.D. student working
+        in the Stanford SUIF Compiler group, as part of his research
+        with Professor Monica Lam.
+        He releases this software as open source with the hope that it
+        will take program analysis to a new level by accelerating the
+        development of new advanced analyses, enabling non-specialists
+        to easily develop their own program analyses, and facilitating
+        collaboration between programming language researchers.&lt;/p&gt;
+
+     
+  </description>
+  <url>http://bddbddb.sourceforge.net/</url>
+  <issueTrackingUrl>http://sourceforge.net/tracker/?group_id=111873</issueTrackingUrl>
+  <siteAddress>shell.sourceforge.net</siteAddress>
+  <siteDirectory>/home/groups/b/bd/bddbddb/htdocs/</siteDirectory>
+  <distributionDirectory>/home/groups/b/bd/bddbddb/</distributionDirectory>
+  <repository>
+    <connection>scm:cvs:pserver:anonymous@bddbddb.cvs.sourceforge.net:/cvsroot/bddbddb:bddbddb</connection>
+    <developerConnection>scm:cvs:ext:joewhaley@bddbddb.cvs.sourceforge.net:/cvsroot/bddbddb:bddbddb</developerConnection>
+    <url>http://bddbddb.cvs.sourceforge.net/bddbddb/</url>
+  </repository>
+  <versions>
+    <version>
+      <id>1.0</id>
+      <name>1.0</name>
+      <tag>HEAD</tag>
+    </version>
+  </versions>
+  <mailingLists>
+    <mailingList>
+      <name>bddbddb Announce List</name>
+      <subscribe>
+        http://lists.sourceforge.net/lists/listinfo/bddbddb-announce
+      </subscribe>
+      <unsubscribe>
+        http://lists.sourceforge.net/lists/listinfo/bddbddb-announce
+      </unsubscribe>
+      <archive>
+        http://sourceforge.net/mailarchive/forum.php?forum=bddbddb-announce
+      </archive>
+    </mailingList>
+    <mailingList>
+      <name>bddbddb Developer List</name>
+      <subscribe>
+        http://lists.sourceforge.net/lists/listinfo/bddbddb-devel
+      </subscribe>
+      <unsubscribe>
+        http://lists.sourceforge.net/lists/listinfo/bddbddb-devel
+      </unsubscribe>
+      <archive>
+        http://sourceforge.net/mailarchive/forum.php?forum=bddbddb-devel
+      </archive>
+    </mailingList>
+    <mailingList>
+      <name>bddbddb CVS Checkins List</name>
+      <subscribe>
+        http://lists.sourceforge.net/lists/listinfo/bddbddb-checkins
+      </subscribe>
+      <unsubscribe>
+        http://lists.sourceforge.net/lists/listinfo/bddbddb-checkins
+      </unsubscribe>
+      <archive>
+        http://sourceforge.net/mailarchive/forum.php?forum=bddbddb-checkins
+      </archive>
+    </mailingList>
+  </mailingLists>
+  <developers>
+    <developer>
+      <name>John Whaley</name>
+      <id>joewhaley</id>
+      <email>joewhaley@users.sourceforge.net</email>
+      <organization>Stanford University</organization>
+      <timezone>-8</timezone>
+    </developer>
+    <developer>
+      <name>Michael Carbin</name>
+      <id>cs343</id>
+      <email>mcarbin@stanford.edu</email>
+      <organization>Stanford University</organization>
+      <timezone>-8</timezone>
+    </developer>
+    <developer>
+      <name>Chris Unkel</name>
+      <id>cunkel</id>
+      <email>cunkel@stanford.edu</email>
+      <organization>Stanford University</organization>
+      <timezone>-8</timezone>
+    </developer>
+    <developer>
+      <name>Dzintars Avots</name>
+      <id>dra</id>
+      <email>dra@suif.stanford.edu</email>
+      <organization>Stanford University</organization>
+      <timezone>-8</timezone>
+    </developer>
+    <developer>
+      <name>Jim Zhuang</name>
+      <id>jzhuang</id>
+      <email>jimz@stanford.edu</email>
+      <organization>Stanford University</organization>
+      <timezone>-8</timezone>
+    </developer>
+  </developers>
+  <dependencies>
+    <dependency>
+      <groupId>javabdd</groupId>
+      <artifactId>javabdd</artifactId>
+      <version>2.0</version>
+      <jar>${basedir}/javabdd-2.0.jar</jar>
+      <url>http://javabdd.sourceforge.net/</url>
+    </dependency>
+    <dependency>
+      <groupId>weka</groupId>
+      <artifactId>weka</artifactId>
+      <version>3.4.2</version>
+      <jar>${basedir}/weka.jar</jar>
+      <url>http://weka.sourceforge.net/</url>
+    </dependency>
+    <dependency>
+      <groupId>jwutil</groupId>
+      <artifactId>jwutil</artifactId>
+      <version>1.0</version>
+      <jar>${basedir}/jwutil-1.0.jar</jar>
+      <url>http://joeq.sourceforge.net/jwutil/</url>
+    </dependency>
+    <dependency>
+      <groupId>jdom</groupId>
+      <artifactId>jdom</artifactId>
+      <version>1.0</version>
+      <url>http://www.jdom.org/</url>
+    </dependency>
+    <dependency>
+      <groupId>statcvs</groupId>
+      <artifactId>maven-statcvs-plugin</artifactId>
+      <version>2.5</version>
+      <type>plugin</type>
+    </dependency>
+  </dependencies>
+  <build>
+    <nagEmailAddress>joewhaley@users.sourceforge.net</nagEmailAddress>
+    <sourceDirectory>.</sourceDirectory>
+    <!-- TODO: Unit tests!
+    <unitTestSourceDirectory>../bddbddb_tests</unitTestSourceDirectory>
+-->
+    <!-- Unit test cases -->
+    <unitTest>
+      <!-- Not currently used.
+      <includes>
+        <include>**/*Test.java</include>
+      </includes>
+      <includes>
+        <include>regression/*.java</include>
+      </includes>
+      <excludes>
+        <exclude>**/RepositoryTest.java</exclude>
+      </excludes>
+-->
+    </unitTest>
+    <!-- J A R  R E S O U R C E S -->
+    <!-- Resources that are packaged up inside the JAR file -->
+    <!-- Integration unit test cases -->
+    <sourceModifications>
+      <sourceModification>
+        <className>bogusClass</className>
+        <excludes>
+          <exclude>target/**</exclude>
+        </excludes>
+      </sourceModification>
+    </sourceModifications>
+    <integrationUnitTest />
+    <jars />
+  </build>
+  <reports>
+    <report>
+      maven-developer-activity-plugin
+    </report>
+    <report>
+      maven-faq-plugin
+    </report>
+    <report>
+      maven-file-activity-plugin
+    </report>
+    <report>
+      maven-jdepend-plugin
+    </report>
+    <report>
+      maven-javadoc-plugin
+    </report>
+    <report>
+      maven-jxr-plugin
+    </report>
+    <report>
+      maven-findbugs-plugin
+    </report>
+    <report>
+      maven-linkcheck-plugin
+    </report>
+    <report>
+      maven-statcvs-plugin
+    </report>
+    <!-- TOO EXPENSIVE
+    <report>
+      maven-checkstyle-plugin
+    </report>
+    <report>
+      maven-pmd-plugin
+    </report>
+    <report>
+      maven-simian-plugin
+    </report>
+-->
+  </reports>
+</project>
+

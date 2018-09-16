@@ -1,0 +1,16 @@
+/abolish
+
+create table knows(who string, whom string);
+insert into knows values ('a','b'), ('b','c'), ('c','d');
+
+%:-type(indc(who:string,whom:string)).
+:-type(link(who:string,whom:string)).
+
+-- Linear recursion definition:
+indc := { K.who, I.whom | K in knows and I in link and K.whom=I.who };
+-- Non-Linear recursion definition:
+indc := { L1.who, L2.whom | L1 in link and L2 in link and L1.whom=L2.who };
+
+link := { L | L in knows or L in indc };
+
+/trc { L | L in link };

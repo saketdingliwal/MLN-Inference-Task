@@ -1,0 +1,26 @@
+% Proximity Equations relating Constants
+does_not ~ a_little  = 0.5. 
+a_little ~ very_much = 0.2.
+does_not ~ so_much   = 0.1. 
+so_much  ~ very_much = 0.6.
+a_little ~ so_much   = 0.4.
+
+% Facts
+likes(john,  cookies, a_little).
+likes(mary,  cookies, very_much).
+likes(peter, cookies, so_much).
+likes(paul,  cookies, does_not).
+
+% Rules
+buy(X,P) :- likes(X, P, very_much).
+
+% :- solve(buy(X,cookies)).
+
+% FDES> buy(X,cookies)  
+% {
+%   answer(mary),
+%   answer(peter)with 0.6,
+%   answer(john)with 0.4,
+%   answer(paul)with 0.4
+% }
+% Info: 4 tuples computed.

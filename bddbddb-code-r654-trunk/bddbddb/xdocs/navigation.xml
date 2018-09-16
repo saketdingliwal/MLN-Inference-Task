@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="bddbddb">
+  <title>bddbddb: BDD-Based Deductive DataBase</title>
+  <organizationLogo href="http://sourceforge.net/sflogo.php?group_id=111873&amp;type=5" />
+  <body>
+    <links>
+      <item name="SourceForge.net Project Page"
+            href="http://sourceforge.net/projects/bddbddb" />
+      <item name="Stanford SUIF Group" 
+            href="http://suif.stanford.edu" />
+    </links>
+    <menu name="Documentation">
+      <item name="What is it?"
+            href="index.html"/>
+      <item name="Links"
+            href="links.html"/>
+      <item name="NEW! PLDI'06 tutorial"
+            href="http://suif.stanford.edu/~jwhaley/PLDITutorial.ppt"/>
+      <item name="PLDI'04 paper"
+            href="http://suif.stanford.edu/~jwhaley/papers/pldi04.pdf"/>
+      <item name="PODS'05 paper"
+            href="http://suif.stanford.edu/~jwhaley/papers/pods05.pdf"/>
+      <item name="Datalog examples"
+            href="http://bddbddb.cvs.sourceforge.net/bddbddb/bddbddb_examples/"/>
+    </menu>
+    <menu name="Download">
+      <item name="NEW! Applet version"
+            href="http://bddbddb.sourceforge.net/applet.html"/>
+      <item name="Download JAR file"
+            href="http://bddbddb.sourceforge.net/bddbddb-full.jar"/>
+    </menu>
+    <footer>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-72567-1";
+urchinTracker();
+</script>
+    </footer>
+  </body>
+</project>

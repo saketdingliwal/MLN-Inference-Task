@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jardesc>
+<jar path="bddbddb/bddbddb.jar"/>
+<options buildIfNeeded="true" compress="true" descriptionLocation="/bddbddb/bddbddb.jardesc" exportErrors="true" exportWarnings="true" overwrite="true" saveDescription="true" useSourceFolders="false"/>
+<manifest generateManifest="false" mainClassHandleIdentifier="=bddbddb/&lt;net.sf.bddbddb{Solver.java[Solver" manifestLocation="/bddbddb/bddbddbManifest" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+<sealing sealJar="false">
+<packagesToSeal/>
+<packagesToUnSeal/>
+</sealing>
+</manifest>
+<selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+<javaElement handleIdentifier="=bddbddb/&lt;net.sf.bddbddb"/>
+<javaElement handleIdentifier="=bddbddb/&lt;net.sf.bddbddb.ir.lowlevel"/>
+<javaElement handleIdentifier="=bddbddb/&lt;net.sf.bddbddb.ir.dynamic"/>
+<javaElement handleIdentifier="=bddbddb/&lt;net.sf.bddbddb.dataflow"/>
+<javaElement handleIdentifier="=bddbddb/&lt;net.sf.bddbddb.ir"/>
+<javaElement handleIdentifier="=bddbddb/&lt;net.sf.bddbddb.order"/>
+<javaElement handleIdentifier="=bddbddb/&lt;net.sf.bddbddb.ir.highlevel"/>
+</selectedElements>
+</jardesc>

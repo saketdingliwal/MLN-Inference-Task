@@ -1,0 +1,52 @@
+% PROXIMITY RELATION AND EQUATIONS
+
+:-fuzzy_relation(near,[reflexive,symmetric]).
+
+sol near callao = 0.6.
+sol near cruz = 0.5.
+callao near plaza_españa = 0.4.
+
+% SIMILARITY RELATION AND EQUATIONS
+
+:-fuzzy_relation(~,[reflexive,symmetric,transitive]).
+
+plain~good=0.5.
+good~very_good=0.5.
+very_good~excellent=0.3.
+% burguer~fast_food=0.7.
+% snacks~fast_food=0.9.
+
+% WEIGHTED RULES:
+
+confidence(local_guide) with 0.9.
+confidence(active_user) with 0.5.
+confidence(casual_user) with 0.3.
+
+% FACTS:
+
+restaurant(don_oso,cruz,burguer).
+restaurant(rodilla,callao,snacks).
+restaurant(roque,sol,rice).
+restaurant(tagliatella,benavente,italian).
+
+user(juan,local_guide).
+user(sara,normal_user).
+user(pepe,casual_user).
+
+comment(juan,don_oso,plain).
+comment(juan,rodilla,good).
+comment(pepe,roque,excellent).
+comment(sara,tagliatella,very_good).
+
+% RULES:
+
+quality(Restaurant,Quality) :-
+  comment(User,Restaurant,Quality),
+  user(User,Type),
+  confidence(Type).
+  
+recommend(Origin,Food,Quality,Restaurant) :-
+  restaurant(Restaurant,Location,Food),
+  Location near Origin,
+  quality(Restaurant,Quality).
+  

@@ -1,0 +1,9 @@
+stock_up(google)@0.9.
+stock_up(greek_bonds)@0.2.
+
+shareholder(paul,google).
+shareholder(paul,greek_bonds).
+
+keep_stock(Name,Stock) :-
+  shareholder(Name,Stock),
+  stock_up(Stock).

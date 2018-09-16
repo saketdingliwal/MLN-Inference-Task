@@ -1,0 +1,3 @@
+edges(a,b).
+edges(X,Y) :- edges(Y,X).
+edges(X,Y)?
