@@ -1,0 +1,248 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> formula
+Rule 1     formula -> body IMPLIES head
+Rule 2     formula -> head
+Rule 3     body -> term
+Rule 4     body -> term COMMA body
+Rule 5     head -> term
+Rule 6     term -> NOT term
+Rule 7     term -> WORD LPAREN arg_seq RPAREN
+Rule 8     arg_seq -> arg
+Rule 9     arg_seq -> arg COMMA arg_seq
+Rule 10    arg -> WORD
+Rule 11    arg -> NUMBER
+
+Terminals, with rules where they appear
+
+COMMA                : 4 9
+IMPLIES              : 1
+LPAREN               : 7
+NOT                  : 6
+NUMBER               : 11
+RPAREN               : 7
+WORD                 : 7 10
+error                : 
+
+Nonterminals, with rules where they appear
+
+arg                  : 8 9
+arg_seq              : 7 9
+body                 : 1 4
+formula              : 0
+head                 : 1 2
+term                 : 3 4 5 6
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . formula
+    (1) formula -> . body IMPLIES head
+    (2) formula -> . head
+    (3) body -> . term
+    (4) body -> . term COMMA body
+    (5) head -> . term
+    (6) term -> . NOT term
+    (7) term -> . WORD LPAREN arg_seq RPAREN
+
+    NOT             shift and go to state 5
+    WORD            shift and go to state 4
+
+    body                           shift and go to state 1
+    formula                        shift and go to state 6
+    head                           shift and go to state 2
+    term                           shift and go to state 3
+
+state 1
+
+    (1) formula -> body . IMPLIES head
+
+    IMPLIES         shift and go to state 7
+
+
+state 2
+
+    (2) formula -> head .
+
+    $end            reduce using rule 2 (formula -> head .)
+
+
+state 3
+
+    (3) body -> term .
+    (4) body -> term . COMMA body
+    (5) head -> term .
+
+    IMPLIES         reduce using rule 3 (body -> term .)
+    COMMA           shift and go to state 8
+    $end            reduce using rule 5 (head -> term .)
+
+
+state 4
+
+    (7) term -> WORD . LPAREN arg_seq RPAREN
+
+    LPAREN          shift and go to state 9
+
+
+state 5
+
+    (6) term -> NOT . term
+    (6) term -> . NOT term
+    (7) term -> . WORD LPAREN arg_seq RPAREN
+
+    NOT             shift and go to state 5
+    WORD            shift and go to state 4
+
+    term                           shift and go to state 10
+
+state 6
+
+    (0) S' -> formula .
+
+
+
+state 7
+
+    (1) formula -> body IMPLIES . head
+    (5) head -> . term
+    (6) term -> . NOT term
+    (7) term -> . WORD LPAREN arg_seq RPAREN
+
+    NOT             shift and go to state 5
+    WORD            shift and go to state 4
+
+    head                           shift and go to state 11
+    term                           shift and go to state 12
+
+state 8
+
+    (4) body -> term COMMA . body
+    (3) body -> . term
+    (4) body -> . term COMMA body
+    (6) term -> . NOT term
+    (7) term -> . WORD LPAREN arg_seq RPAREN
+
+    NOT             shift and go to state 5
+    WORD            shift and go to state 4
+
+    body                           shift and go to state 13
+    term                           shift and go to state 14
+
+state 9
+
+    (7) term -> WORD LPAREN . arg_seq RPAREN
+    (8) arg_seq -> . arg
+    (9) arg_seq -> . arg COMMA arg_seq
+    (10) arg -> . WORD
+    (11) arg -> . NUMBER
+
+    WORD            shift and go to state 18
+    NUMBER          shift and go to state 16
+
+    arg                            shift and go to state 17
+    arg_seq                        shift and go to state 15
+
+state 10
+
+    (6) term -> NOT term .
+
+    COMMA           reduce using rule 6 (term -> NOT term .)
+    IMPLIES         reduce using rule 6 (term -> NOT term .)
+    $end            reduce using rule 6 (term -> NOT term .)
+
+
+state 11
+
+    (1) formula -> body IMPLIES head .
+
+    $end            reduce using rule 1 (formula -> body IMPLIES head .)
+
+
+state 12
+
+    (5) head -> term .
+
+    $end            reduce using rule 5 (head -> term .)
+
+
+state 13
+
+    (4) body -> term COMMA body .
+
+    IMPLIES         reduce using rule 4 (body -> term COMMA body .)
+
+
+state 14
+
+    (3) body -> term .
+    (4) body -> term . COMMA body
+
+    IMPLIES         reduce using rule 3 (body -> term .)
+    COMMA           shift and go to state 8
+
+
+state 15
+
+    (7) term -> WORD LPAREN arg_seq . RPAREN
+
+    RPAREN          shift and go to state 19
+
+
+state 16
+
+    (11) arg -> NUMBER .
+
+    COMMA           reduce using rule 11 (arg -> NUMBER .)
+    RPAREN          reduce using rule 11 (arg -> NUMBER .)
+
+
+state 17
+
+    (8) arg_seq -> arg .
+    (9) arg_seq -> arg . COMMA arg_seq
+
+    RPAREN          reduce using rule 8 (arg_seq -> arg .)
+    COMMA           shift and go to state 20
+
+
+state 18
+
+    (10) arg -> WORD .
+
+    COMMA           reduce using rule 10 (arg -> WORD .)
+    RPAREN          reduce using rule 10 (arg -> WORD .)
+
+
+state 19
+
+    (7) term -> WORD LPAREN arg_seq RPAREN .
+
+    COMMA           reduce using rule 7 (term -> WORD LPAREN arg_seq RPAREN .)
+    IMPLIES         reduce using rule 7 (term -> WORD LPAREN arg_seq RPAREN .)
+    $end            reduce using rule 7 (term -> WORD LPAREN arg_seq RPAREN .)
+
+
+state 20
+
+    (9) arg_seq -> arg COMMA . arg_seq
+    (8) arg_seq -> . arg
+    (9) arg_seq -> . arg COMMA arg_seq
+    (10) arg -> . WORD
+    (11) arg -> . NUMBER
+
+    WORD            shift and go to state 18
+    NUMBER          shift and go to state 16
+
+    arg_seq                        shift and go to state 21
+    arg                            shift and go to state 17
+
+state 21
+
+    (9) arg_seq -> arg COMMA arg_seq .
+
+    RPAREN          reduce using rule 9 (arg_seq -> arg COMMA arg_seq .)
+
