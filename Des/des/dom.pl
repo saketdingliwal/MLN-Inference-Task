@@ -1,0 +1,16 @@
+domain(a0).
+domain(a1).
+domain(a2).
+domain(a3).
+domain(a4).
+domain(a5).
+domain(a6).
+domain(a7).
+domain(a8).
+domain(a9).
+domain(a10).
+domain(a11).
+domain(a12).
+domain(a13).
+domain(a14).
+domain(a15).
