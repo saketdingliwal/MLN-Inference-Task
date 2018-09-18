@@ -9,28 +9,30 @@ Rule 3     body -> term
 Rule 4     body -> term COMMA body
 Rule 5     head -> term
 Rule 6     term -> NOT term
-Rule 7     term -> PRED LPAREN arg_seq RPAREN
-Rule 8     arg_seq -> arg
-Rule 9     arg_seq -> arg COMMA arg_seq
-Rule 10    arg -> VAR
-Rule 11    arg -> NUMBER
+Rule 7     term -> PRED LPAREN args RPAREN
+Rule 8     args -> arg_seq
+Rule 9     arg_seq -> arg
+Rule 10    arg_seq -> arg COMMA arg_seq
+Rule 11    arg -> VAR
+Rule 12    arg -> NUMBER
 
 Terminals, with rules where they appear
 
-COMMA                : 4 9
+COMMA                : 4 10
 IMPLIES              : 1
 LPAREN               : 7
 NOT                  : 6
-NUMBER               : 11
+NUMBER               : 12
 PRED                 : 7
 RPAREN               : 7
-VAR                  : 10
+VAR                  : 11
 error                : 
 
 Nonterminals, with rules where they appear
 
-arg                  : 8 9
-arg_seq              : 7 9
+arg                  : 9 10
+arg_seq              : 8 10
+args                 : 7
 body                 : 1 4
 formula              : 0
 head                 : 1 2
@@ -47,7 +49,7 @@ state 0
     (4) body -> . term COMMA body
     (5) head -> . term
     (6) term -> . NOT term
-    (7) term -> . PRED LPAREN arg_seq RPAREN
+    (7) term -> . PRED LPAREN args RPAREN
 
     NOT             shift and go to state 5
     PRED            shift and go to state 3
@@ -73,7 +75,7 @@ state 2
 
 state 3
 
-    (7) term -> PRED . LPAREN arg_seq RPAREN
+    (7) term -> PRED . LPAREN args RPAREN
 
     LPAREN          shift and go to state 8
 
@@ -93,7 +95,7 @@ state 5
 
     (6) term -> NOT . term
     (6) term -> . NOT term
-    (7) term -> . PRED LPAREN arg_seq RPAREN
+    (7) term -> . PRED LPAREN args RPAREN
 
     NOT             shift and go to state 5
     PRED            shift and go to state 3
@@ -111,7 +113,7 @@ state 7
     (1) formula -> body IMPLIES . head
     (5) head -> . term
     (6) term -> . NOT term
-    (7) term -> . PRED LPAREN arg_seq RPAREN
+    (7) term -> . PRED LPAREN args RPAREN
 
     NOT             shift and go to state 5
     PRED            shift and go to state 3
@@ -121,17 +123,19 @@ state 7
 
 state 8
 
-    (7) term -> PRED LPAREN . arg_seq RPAREN
-    (8) arg_seq -> . arg
-    (9) arg_seq -> . arg COMMA arg_seq
-    (10) arg -> . VAR
-    (11) arg -> . NUMBER
+    (7) term -> PRED LPAREN . args RPAREN
+    (8) args -> . arg_seq
+    (9) arg_seq -> . arg
+    (10) arg_seq -> . arg COMMA arg_seq
+    (11) arg -> . VAR
+    (12) arg -> . NUMBER
 
-    VAR             shift and go to state 16
+    VAR             shift and go to state 17
     NUMBER          shift and go to state 14
 
-    arg                            shift and go to state 15
-    arg_seq                        shift and go to state 13
+    args                           shift and go to state 13
+    arg                            shift and go to state 16
+    arg_seq                        shift and go to state 15
 
 state 9
 
@@ -139,13 +143,13 @@ state 9
     (3) body -> . term
     (4) body -> . term COMMA body
     (6) term -> . NOT term
-    (7) term -> . PRED LPAREN arg_seq RPAREN
+    (7) term -> . PRED LPAREN args RPAREN
 
     NOT             shift and go to state 5
     PRED            shift and go to state 3
 
-    body                           shift and go to state 17
-    term                           shift and go to state 18
+    body                           shift and go to state 18
+    term                           shift and go to state 19
 
 state 10
 
@@ -172,44 +176,51 @@ state 12
 
 state 13
 
-    (7) term -> PRED LPAREN arg_seq . RPAREN
+    (7) term -> PRED LPAREN args . RPAREN
 
-    RPAREN          shift and go to state 19
+    RPAREN          shift and go to state 20
 
 
 state 14
 
-    (11) arg -> NUMBER .
+    (12) arg -> NUMBER .
 
-    COMMA           reduce using rule 11 (arg -> NUMBER .)
-    RPAREN          reduce using rule 11 (arg -> NUMBER .)
+    COMMA           reduce using rule 12 (arg -> NUMBER .)
+    RPAREN          reduce using rule 12 (arg -> NUMBER .)
 
 
 state 15
 
-    (8) arg_seq -> arg .
-    (9) arg_seq -> arg . COMMA arg_seq
+    (8) args -> arg_seq .
 
-    RPAREN          reduce using rule 8 (arg_seq -> arg .)
-    COMMA           shift and go to state 20
+    RPAREN          reduce using rule 8 (args -> arg_seq .)
 
 
 state 16
 
-    (10) arg -> VAR .
+    (9) arg_seq -> arg .
+    (10) arg_seq -> arg . COMMA arg_seq
 
-    COMMA           reduce using rule 10 (arg -> VAR .)
-    RPAREN          reduce using rule 10 (arg -> VAR .)
+    RPAREN          reduce using rule 9 (arg_seq -> arg .)
+    COMMA           shift and go to state 21
 
 
 state 17
+
+    (11) arg -> VAR .
+
+    COMMA           reduce using rule 11 (arg -> VAR .)
+    RPAREN          reduce using rule 11 (arg -> VAR .)
+
+
+state 18
 
     (4) body -> term COMMA body .
 
     IMPLIES         reduce using rule 4 (body -> term COMMA body .)
 
 
-state 18
+state 19
 
     (3) body -> term .
     (4) body -> term . COMMA body
@@ -218,32 +229,32 @@ state 18
     COMMA           shift and go to state 9
 
 
-state 19
-
-    (7) term -> PRED LPAREN arg_seq RPAREN .
-
-    COMMA           reduce using rule 7 (term -> PRED LPAREN arg_seq RPAREN .)
-    IMPLIES         reduce using rule 7 (term -> PRED LPAREN arg_seq RPAREN .)
-    $end            reduce using rule 7 (term -> PRED LPAREN arg_seq RPAREN .)
-
-
 state 20
 
-    (9) arg_seq -> arg COMMA . arg_seq
-    (8) arg_seq -> . arg
-    (9) arg_seq -> . arg COMMA arg_seq
-    (10) arg -> . VAR
-    (11) arg -> . NUMBER
+    (7) term -> PRED LPAREN args RPAREN .
 
-    VAR             shift and go to state 16
-    NUMBER          shift and go to state 14
+    COMMA           reduce using rule 7 (term -> PRED LPAREN args RPAREN .)
+    IMPLIES         reduce using rule 7 (term -> PRED LPAREN args RPAREN .)
+    $end            reduce using rule 7 (term -> PRED LPAREN args RPAREN .)
 
-    arg_seq                        shift and go to state 21
-    arg                            shift and go to state 15
 
 state 21
 
-    (9) arg_seq -> arg COMMA arg_seq .
+    (10) arg_seq -> arg COMMA . arg_seq
+    (9) arg_seq -> . arg
+    (10) arg_seq -> . arg COMMA arg_seq
+    (11) arg -> . VAR
+    (12) arg -> . NUMBER
 
-    RPAREN          reduce using rule 9 (arg_seq -> arg COMMA arg_seq .)
+    VAR             shift and go to state 17
+    NUMBER          shift and go to state 14
+
+    arg_seq                        shift and go to state 22
+    arg                            shift and go to state 16
+
+state 22
+
+    (10) arg_seq -> arg COMMA arg_seq .
+
+    RPAREN          reduce using rule 10 (arg_seq -> arg COMMA arg_seq .)
 

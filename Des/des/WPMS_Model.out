@@ -1,0 +1,19 @@
+c *** lbx: Literal-Based MCS eXtractor ***
+c *** author: Carlos Mencia (carlos.mencia@ucd.ie) ***
+c *** contributors: Alessandro Previti, Joao Marques-Silva ***
+c 
+c *** instance: WPMS_Constraints.cnf ***
+c *** config: -num 0 -mxapp -wm -T 3600 ***
+c 
+c Parsing ...
+c Parsing CPU Time: 0
+c Running LBX ...
+c MCS UB: 0
+c model: 
+c MCS: 
+c MCS Cost: 0
+c model: 
+c Current min MCS cost: 0
+c Number of MCSes: 1
+c Terminating LBX ...
+c CPU Time: 0

@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'formulaCOMMA IMPLIES LPAREN NOT NUMBER PRED RPAREN VARformula  : body IMPLIES head \n\t\t\t\t| headbody : term \n\t\t\t| term COMMA bodyhead : termterm : NOT term \n\t\t\t| PRED LPAREN arg_seq RPARENarg_seq  : arg \n\t\t\t\t| arg COMMA arg_seqarg : VAR \n\t\t| NUMBER'
+_lr_signature = 'formulaCOMMA IMPLIES LPAREN NOT NUMBER PRED RPAREN VARformula  : body IMPLIES head \n\t\t\t\t| headbody : term \n\t\t\t| term COMMA bodyhead : termterm : NOT term \n\t\t\t| PRED LPAREN args RPARENargs : arg_seqarg_seq  : arg \n\t\t\t\t| arg COMMA arg_seqarg : VAR \n\t\t| NUMBER'
     
-_lr_action_items = {'IMPLIES':([1,4,10,17,18,19,],[7,-3,-6,-4,-3,-7,]),'PRED':([0,5,7,9,],[3,3,3,3,]),'NUMBER':([8,20,],[14,14,]),'VAR':([8,20,],[16,16,]),'COMMA':([4,10,14,15,16,18,19,],[9,-6,-11,20,-10,9,-7,]),'LPAREN':([3,],[8,]),'NOT':([0,5,7,9,],[5,5,5,5,]),'RPAREN':([13,14,15,16,21,],[19,-11,-8,-10,-9,]),'$end':([2,4,6,10,11,12,19,],[-2,-5,0,-6,-1,-5,-7,]),}
+_lr_action_items = {'IMPLIES':([1,4,10,18,19,20,],[7,-3,-6,-4,-3,-7,]),'PRED':([0,5,7,9,],[3,3,3,3,]),'NUMBER':([8,21,],[14,14,]),'VAR':([8,21,],[17,17,]),'COMMA':([4,10,14,16,17,19,20,],[9,-6,-12,21,-11,9,-7,]),'LPAREN':([3,],[8,]),'NOT':([0,5,7,9,],[5,5,5,5,]),'RPAREN':([13,14,15,16,17,22,],[20,-12,-8,-9,-11,-10,]),'$end':([2,4,6,10,11,12,20,],[-2,-5,0,-6,-1,-5,-7,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'body':([0,9,],[1,17,]),'head':([0,7,],[2,11,]),'arg_seq':([8,20,],[13,21,]),'term':([0,5,7,9,],[4,10,12,18,]),'arg':([8,20,],[15,15,]),'formula':([0,],[6,]),}
+_lr_goto_items = {'body':([0,9,],[1,18,]),'head':([0,7,],[2,11,]),'args':([8,],[13,]),'term':([0,5,7,9,],[4,10,12,19,]),'arg_seq':([8,21,],[15,22,]),'formula':([0,],[6,]),'arg':([8,21,],[16,16,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,15 +27,16 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> formula","S'",1,None,None,None),
-  ('formula -> body IMPLIES head','formula',3,'p_formula','Interact.py',78),
-  ('formula -> head','formula',1,'p_formula','Interact.py',79),
-  ('body -> term','body',1,'p_body_1','Interact.py',86),
-  ('body -> term COMMA body','body',3,'p_body_1','Interact.py',87),
-  ('head -> term','head',1,'p_head','Interact.py',91),
-  ('term -> NOT term','term',2,'p_term','Interact.py',95),
-  ('term -> PRED LPAREN arg_seq RPAREN','term',4,'p_term','Interact.py',96),
-  ('arg_seq -> arg','arg_seq',1,'p_argseq','Interact.py',103),
-  ('arg_seq -> arg COMMA arg_seq','arg_seq',3,'p_argseq','Interact.py',104),
-  ('arg -> VAR','arg',1,'p_arg','Interact.py',111),
-  ('arg -> NUMBER','arg',1,'p_arg','Interact.py',112),
+  ('formula -> body IMPLIES head','formula',3,'p_formula','Interact.py',70),
+  ('formula -> head','formula',1,'p_formula','Interact.py',71),
+  ('body -> term','body',1,'p_body_1','Interact.py',78),
+  ('body -> term COMMA body','body',3,'p_body_1','Interact.py',79),
+  ('head -> term','head',1,'p_head','Interact.py',83),
+  ('term -> NOT term','term',2,'p_term','Interact.py',87),
+  ('term -> PRED LPAREN args RPAREN','term',4,'p_term','Interact.py',88),
+  ('args -> arg_seq','args',1,'p_args','Interact.py',95),
+  ('arg_seq -> arg','arg_seq',1,'p_argseq','Interact.py',99),
+  ('arg_seq -> arg COMMA arg_seq','arg_seq',3,'p_argseq','Interact.py',100),
+  ('arg -> VAR','arg',1,'p_arg','Interact.py',107),
+  ('arg -> NUMBER','arg',1,'p_arg','Interact.py',108),
 ]
