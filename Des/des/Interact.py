@@ -90,9 +90,9 @@ def p_term(p):
 	'''term : NOT term 
 			| PRED LPAREN args RPAREN'''
 	if len(p)==3:
-		p[0] = Term(not p[2][0],p[2][1],p[2][2])
+		p[0] = Term(-p[2].sign,p[2].psym,p[2].args)
 	else:
-		p[0] = Term(True,p[1],p[3])
+		p[0] = Term(1,p[1],p[3])
 
 def p_args(p):
 	'''args : arg_seq'''
@@ -140,6 +140,8 @@ class Term:
 		self.sign = sign
 		self.psym = psym
 		self.args = args
+	def negate(self):
+		return Term(-1*self.sign,self.psym,self.args)
 
 def execute_Des(line):
 	proc.sendline(line)
@@ -149,12 +151,12 @@ def execute_Des(line):
 def term_to_Atom(term):
 	res = []
 	sign,psym,args = term.sign, term.psym, term.args
-	if not sign: res.append("not ")
+	if sign==-1: res.append("not ")
 	res.append(psym)
 	res.append("(")
-	for arg in args:
+	for i,arg in enumerate(args):
 		res.append(arg if type(arg) is str else ("a"+str(arg)))
-		if arg!=args[-1]:
+		if (i+1)!=len(args):
 			res.append(",")
 		else:
 			res.append(")")
@@ -168,9 +170,9 @@ def formula_to_rule(formula):
 	if len(body)==0 and len(variables)==0:
 		return ''.join(res)
 	res.append(" :- ")
-	for variable in variables:
+	for i,variable in enumerate(variables):
 		res.append("domain("+variable+")")
-		if variable!=variables[-1]:
+		if (i+1)!=len(variables):
 			res.append(", ")
 	for term in body:
 		res.append(", ")
@@ -199,13 +201,12 @@ def term_to_literal(term,vmap):
 	if key not in term_to_lit:
 		term_to_lit[key] = len(term_to_lit)+1
 		lit_to_term.append(Term(True,psym,args))
-	return ((1 if sign else -1)*term_to_lit[key])
+	return (sign*term_to_lit[key])
 
-def WPMS_Step():
-	clause_list = []
-	total_weight=0
-	for i,(groundings,formula) in enumerate(zip(Hard_Groundings+Soft_Groundings,Hard_Formulas+Soft_Formulas)):
-		total_weight+=(len(groundings)*formula.weight)
+def get_clauses(Groundings,Formulas):
+	clause_list,tweight = [],0
+	for i,(groundings,formula) in enumerate(zip(Groundings,Formulas)):
+		tweight+=(len(groundings)*formula.weight)
 		variables = formula.variables
 		body,head = formula.body, formula.head
 		for grounding in groundings:
@@ -214,7 +215,13 @@ def WPMS_Step():
 			for term in body:
 				clause.append(-1*term_to_literal(term,vmap))
 			clause_list.append((clause,formula.weight))
+	return clause_list,tweight
 
+def WPMS_Step():
+	hard_clauses,hard_weight = get_clauses(Hard_Groundings,Hard_Formulas)
+	soft_clauses,soft_weight = get_clauses(Soft_Groundings,Soft_Formulas)
+
+	clause_list = hard_clauses+soft_clauses
 	nliterals = len(term_to_lit)
 	nclauses = len(clause_list)
 	with open(WPMS_FILE,'w') as f:
@@ -231,8 +238,9 @@ def WPMS_Step():
 	model = (re.findall(r'model: (.*)\n',output)[1]).split()
 	min_cost = int(re.findall(r'Current min MCS cost: (.*)\n',output)[0])
 	Q = [lit_to_term[int(elem)] for elem in model if int(elem)>0]
-	W = total_weight - min_cost
-	print Q,W
+	W = soft_weight - min_cost
+	print [(term.sign,term.psym,term.args) for term in Q]
+	print W
 	return Q,W
 
 
@@ -262,24 +270,11 @@ def Input():
 			formula = parser.parse(formula)
 			Soft_Formulas.append(Formula(formula[0],formula[1],int(weight)))
 	
-def Init_Grounding():
-	global Hard_Groundings,Soft_Groundings
-	with open(DOM_FILE,'w') as f:
-		for i in range(n):
-			f.write("domain(a"+str(i)+").\n")
-
-	with open(HARD_FILE,'w') as f:
-		for formula in Hard_Formulas:
-			f.write(formula_to_rule(formula)+".\n")
-
-	with open(SOFT_FILE,'w') as f:
-		for formula in Soft_Formulas:
-			f.write(formula_to_rule(formula)+".\n")
-	Datalog_User(True)
 
 def get_Groundings(i,formula,flag):
-	head = Term(flag,"ans"+str(i),formula.variables)
-	body = [formula.head]+formula.body
+	fh = formula.head
+	head = Term(1,"ans"+str(i),formula.variables)
+	body = [Term(fh.sign*flag,fh.psym,fh.args)]+formula.body
 	des_formula = formula_to_rule(Formula(body,head,max_weight))
 	execute_Des("/assert "+ des_formula)
 	execute_Des(term_to_Atom(head))
@@ -299,20 +294,21 @@ def Datalog_User(flag):
 	all_hard_satisfied = True
 
 	for i,formula in enumerate(Hard_Formulas):
-		if len(formula.variables)==0:
+		if not len(formula.variables):
 			if itr==0:
-				all_hard_satisfied=False
+				all_hard_satisfied = False
 			Hard_Groundings[i].update([()])
 			continue
 		more_groundings = get_Groundings(i,formula,flag)
-		if len(more_groundings)>0:
-			all_hard_satisfied = False
 		Hard_Groundings[i].update(more_groundings)
+		print flag,more_groundings
+		if len(more_groundings):
+			all_hard_satisfied = False
 	
 	if flag: return all_hard_satisfied
 
 	for i,formula in enumerate(Soft_Formulas):
-		if len(formula.variables)==0:
+		if not len(formula.variables):
 			Soft_Groundings.update([()])
 			continue
 		more_groundings = get_Groundings(i,formula,flag)
@@ -320,6 +316,19 @@ def Datalog_User(flag):
 
 	return all_hard_satisfied
 
+def Init_Grounding():
+	with open(DOM_FILE,'w') as f:
+		for i in range(n):
+			f.write("domain(a"+str(i)+").\n")
+
+	with open(HARD_FILE,'w') as f:
+		for formula in Hard_Formulas:
+			f.write(formula_to_rule(formula)+".\n")
+
+	with open(SOFT_FILE,'w') as f:
+		for formula in Soft_Formulas:
+			f.write(formula_to_rule(formula)+".\n")
+	Datalog_User(1)
 
 def Violations():
 	with open(QFILE,'w') as f:
@@ -327,7 +336,7 @@ def Violations():
 			formula = Formula([],term,max_weight)
 			f.write(formula_to_rule(formula)+".\n")
 
-	return Datalog_User(False)
+	return Datalog_User(-1)
 
 
 
@@ -335,12 +344,12 @@ n,m,max_weight = 0,0,0
 Preds = [("domain",1)] 	#(Symbol,Arity)
 Q = []					#Solution
 W=0						#Solution Weight
-Hard_Formulas = []		#H
-Soft_Formulas = []		#S
+Hard_Formulas   = []	#H
+Soft_Formulas   = []	#S
 Hard_Groundings = []	#phi	
 Soft_Groundings = []	#psi
-lit_to_term = [-1]
-term_to_lit = {}
+lit_to_term     = [-1]
+term_to_lit     = {}
 proc = pexpect.spawn(DES_COMMAND)	#Running Datalog Solver
 proc.expect(PROMPT)
 
@@ -350,8 +359,7 @@ Init_Grounding()
 while True:
 	all_hard_satisfied = Violations()
 	Q_,W_ = WPMS_Step()
-	break
-	if(W = W_ and all_hard_satisfied)
+	if((W == W_) and all_hard_satisfied):
 		break
 	Q,W = Q_,W_
 	itr+=1
