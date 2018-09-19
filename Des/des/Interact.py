@@ -9,13 +9,13 @@ DES_COMMAND = "./des"
 PROMPT = "DES>"
 PATH = ""
 ARGI = 1
-DOM_FILE  = "dom.pl"
-HARD_FILE = "Hard_Formulas.pl"
-SOFT_FILE = "Soft_Formulas.pl"
-QFILE	  = "Model_File.pl"
-WPMS_FILE = "WPMS_Constraints.cnf"
+DOM_FILE  		= "dom.pl"
+HARD_FILE 		= "Hard_Formulas.pl"
+SOFT_FILE 		= "Soft_Formulas.pl"
+QFILE	  		= "Model_File.pl"
+WPMS_FILE 		= "WPMS_Constraints.cnf"
 WPMS_MODEL_FILE = "WPMS_Model.out"
-LBX_COMMAND = "./lbx -wm -mxapp "
+LBX_COMMAND 	= "./lbx -wm -mxapp "
 
 # List of token names.   This is always required
 tokens = (
@@ -90,7 +90,7 @@ def p_term(p):
 	'''term : NOT term 
 			| PRED LPAREN args RPAREN'''
 	if len(p)==3:
-		p[0] = Term(-p[2].sign,p[2].psym,p[2].args)
+		p[0] = p[2].negate()
 	else:
 		p[0] = Term(1,p[1],p[3])
 
@@ -101,15 +101,12 @@ def p_args(p):
 def p_argseq(p):
 	'''arg_seq  : arg 
 				| arg COMMA arg_seq'''
-	if len(p)==2:
-		p[0] = [p[1]]
-	else:
-		p[0] = [p[1]]+p[3]
+	p[0] = [p[1]]+(p[3] if len(p)!=2 else []) 
 
 def p_arg(p):
 	'''arg : VAR 
 		| NUMBER'''
-	p[0] = int(p[1]) if isinstance(p[1],(int,long)) else p[1]
+	p[0] = int(p[1]) if not type(p[1]) is str else p[1]
 
 
 # Error rule for syntax errors
@@ -130,10 +127,10 @@ def fvars(formula):
 
 class Formula:
 	def __init__(self,body,head,weight):
-		self.head = head
-		self.body = body
-		self.weight = weight
-		self.variables = fvars(self)
+		self.head 		= head
+		self.body 		= body
+		self.weight 	= weight
+		self.variables  = fvars(self)
 
 class Term:
 	def __init__(self,sign,psym,args):
@@ -163,7 +160,7 @@ def term_to_Atom(term):
 	return ''.join(res)
 
 def formula_to_rule(formula):
-	res = []
+	res 	  = []
 	body,head = formula.body, formula.head
 	variables = formula.variables
 	res.append(term_to_Atom(head))
@@ -180,12 +177,12 @@ def formula_to_rule(formula):
 	return ''.join(res)	
 
 def parse_Output(strg):
-	match = re.search(r'{(.*)}',strg,re.DOTALL)
+	match 	= re.search(r'{(.*)}',strg,re.DOTALL)
 	matches = re.split(",\r\n",match.groups()[0])
 	matches = [match.split()[0] for match in matches if len(match.split())!=0]
-	res = []
+	res 	= []
 	for match in matches:
-		x = re.search(r'\((.*)\)',match).groups()[0].split(',')
+		x   = re.search(r'\((.*)\)',match).groups()[0].split(',')
 		res.append(tuple(int(r[1:]) for r in x))
 	return res
 
@@ -197,7 +194,7 @@ def term_to_literal(term,vmap):
 	global term_to_lit,lit_to_term
 	term = substitute(term,vmap)
 	sign,psym,args = term.sign, term.psym, term.args
-	key = (psym,args)
+	key  = (psym,args)
 	if key not in term_to_lit:
 		term_to_lit[key] = len(term_to_lit)+1
 		lit_to_term.append(Term(True,psym,args))
@@ -207,10 +204,10 @@ def get_clauses(Groundings,Formulas):
 	clause_list,tweight = [],0
 	for i,(groundings,formula) in enumerate(zip(Groundings,Formulas)):
 		tweight+=(len(groundings)*formula.weight)
-		variables = formula.variables
-		body,head = formula.body, formula.head
+		variables  = formula.variables
+		body,head  = formula.body, formula.head
 		for grounding in groundings:
-			vmap = {x:y for x,y in zip(variables,grounding)}
+			vmap   = {x:y for x,y in zip(variables,grounding)}
 			clause = [term_to_literal(head,vmap)]
 			for term in body:
 				clause.append(-1*term_to_literal(term,vmap))
@@ -222,8 +219,8 @@ def WPMS_Step():
 	soft_clauses,soft_weight = get_clauses(Soft_Groundings,Soft_Formulas)
 
 	clause_list = hard_clauses+soft_clauses
-	nliterals = len(term_to_lit)
-	nclauses = len(clause_list)
+	nliterals   = len(term_to_lit)
+	nclauses    = len(clause_list)
 	with open(WPMS_FILE,'w') as f:
 		f.write("p wcnf "+str(nliterals)+" "+str(nclauses)+" "+str(max_weight)+"\n")
 		for clause,weight in clause_list:
@@ -234,12 +231,12 @@ def WPMS_Step():
 	
 	os.system(LBX_COMMAND+WPMS_FILE+"> "+WPMS_MODEL_FILE)
 	with open(WPMS_MODEL_FILE,'r') as f:
-		output = ''.join(f.readlines())
-	model = (re.findall(r'model: (.*)\n',output)[1]).split()
-	min_cost = int(re.findall(r'Current min MCS cost: (.*)\n',output)[0])
-	Q = [lit_to_term[int(elem)] for elem in model if int(elem)>0]
-	W = soft_weight - min_cost
-	print [(term.sign,term.psym,term.args) for term in Q]
+		output  = ''.join(f.readlines())
+	model 	 	= (re.findall(r'model: (.*)\n',output)[1]).split()
+	min_cost 	= int(re.findall(r'Current min MCS cost: (.*)\n',output)[0])
+	Q 			= [lit_to_term[int(elem)] for elem in model if int(elem)>0]
+	W 			= soft_weight - min_cost
+	print [term_to_Atom(Term(term.sign,term.psym,term.args)) for term in Q]
 	print W
 	return Q,W
 
@@ -258,35 +255,34 @@ def Input():
 		Soft_Groundings = [Set([]) for elem in range(soft_size)]
 		
 		for i in range(hard_size):
-			text = f.readline().rstrip("\n")
-			text = text.rstrip("\r")
+			text 	= f.readline().rstrip("\n").rstrip("\r")
 			formula = parser.parse(text)
 			Hard_Formulas.append(Formula(formula[0],formula[1],max_weight))
 
 		for i in range(soft_size):
-			text = f.readline().rstrip("\n")
-			text = text.rstrip("\r")
-			formula,weight = text.split("::")
-			formula = parser.parse(formula)
+			text 		    = f.readline().rstrip("\n").rstrip("\r")
+			formula,weight  = text.split("::")
+			formula 		= parser.parse(formula)
 			Soft_Formulas.append(Formula(formula[0],formula[1],int(weight)))
 	
 
 def get_Groundings(i,formula,flag):
-	fh = formula.head
-	head = Term(1,"ans"+str(i),formula.variables)
-	body = [Term(fh.sign*flag,fh.psym,fh.args)]+formula.body
-	des_formula = formula_to_rule(Formula(body,head,max_weight))
+	fh 				= formula.head
+	head 			= Term(1,"ans"+str(i),formula.variables)
+	body 			= [Term(fh.sign*flag,fh.psym,fh.args)]+formula.body
+	Query_Formula 	= Formula(body,head,max_weight)
+	des_formula 	= formula_to_rule(Query_Formula)
 	execute_Des("/assert "+ des_formula)
 	execute_Des(term_to_Atom(head))
 
-	groundings = parse_Output(proc.before)
+	groundings 		= parse_Output(proc.before)
 	return groundings
 
 
 
 def Datalog_User(flag):
 	execute_Des("/consult "+PATH+DOM_FILE)
-	if flag: 
+	if flag==1:
 		execute_Des("/reconsult "+PATH+HARD_FILE)
 	else:
 		execute_Des("/reconsult "+PATH+QFILE)
@@ -301,11 +297,10 @@ def Datalog_User(flag):
 			continue
 		more_groundings = get_Groundings(i,formula,flag)
 		Hard_Groundings[i].update(more_groundings)
-		print flag,more_groundings
 		if len(more_groundings):
 			all_hard_satisfied = False
 	
-	if flag: return all_hard_satisfied
+	if flag==1: return all_hard_satisfied
 
 	for i,formula in enumerate(Soft_Formulas):
 		if not len(formula.variables):
@@ -340,17 +335,17 @@ def Violations():
 
 
 
-n,m,max_weight = 0,0,0
-Preds = [("domain",1)] 	#(Symbol,Arity)
-Q = []					#Solution
-W=0						#Solution Weight
-Hard_Formulas   = []	#H
-Soft_Formulas   = []	#S
-Hard_Groundings = []	#phi	
-Soft_Groundings = []	#psi
+n,m,max_weight  = 0,0,0
+Preds 			= [("domain",1)] 	#(Symbol,Arity)
+Q 				= []				#Solution
+W 				= 0					#Solution Weight
+Hard_Formulas   = []				#H
+Soft_Formulas   = []				#S
+Hard_Groundings = []				#phi	
+Soft_Groundings = []				#psi
 lit_to_term     = [-1]
 term_to_lit     = {}
-proc = pexpect.spawn(DES_COMMAND)	#Running Datalog Solver
+proc 			= pexpect.spawn(DES_COMMAND)	#Running Datalog Solver
 proc.expect(PROMPT)
 
 itr=0
@@ -358,10 +353,9 @@ Input()
 Init_Grounding()
 while True:
 	all_hard_satisfied = Violations()
+	print Soft_Groundings
 	Q_,W_ = WPMS_Step()
 	if((W == W_) and all_hard_satisfied):
 		break
 	Q,W = Q_,W_
 	itr+=1
-
-

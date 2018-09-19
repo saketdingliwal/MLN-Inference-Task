@@ -8,12 +8,18 @@ c
 c Parsing ...
 c Parsing CPU Time: 0
 c Running LBX ...
-c MCS UB: 0
-c model: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 
-c MCS: 
-c MCS Cost: 0
-c model: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 
-c Current min MCS cost: 0
-c Number of MCSes: 1
+c MCS UB: 9
+c model: 1 2 3 4 5 6 7 8 9 10 -11 12 13 14 15 16 
+c MCS: 17 20 21 22 
+c MCS Cost: 9
+c model: 1 2 3 4 5 6 7 8 9 10 -11 12 13 14 15 16 
+c Current min MCS cost: 9
+c MCS UB: 8
+c model: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 
+c MCS: 20 21 22 23 
+c MCS Cost: 8
+c model: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 
+c Current min MCS cost: 8
+c Number of MCSes: 2
 c Terminating LBX ...
 c CPU Time: 0
